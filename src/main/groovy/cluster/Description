@@ -1,0 +1,156 @@
+Notes on Compilation environment
+
+Use Java 13 and Groovy.3.0.0-beta-3
+
+What is in the folder
+
+boilerPlate
+    These are the base files which can be used by the Builder to populate a Host or Node
+    It is assumed that Emit and Collect will be on the Host node
+    Comments in the files indicate where the bits the builder has to incorporate  should go
+    These files contain sections that work on loop-back 127.0.0.? style networks and real ones
+
+boilerTest
+    Create instances of the files in boilerPlate one for the host and one for each of the two nodes
+    These tests do nothing except make sure that the signalling between host and nodes is correct
+
+data
+    Contains the data definitions for Montecarlo pi
+    Note that a serialised version of MCpiData is required because when you send an object over
+        a network the object must be serialised
+    The serialised version of Results arises because it refers to a object which it casts to SerializedMCpiData,
+        If we removed the cast then this would not be needed
+
+gppScript
+    Contains the description of the cluster in the style we are using.  I hope it is correct
+
+builtScripts
+    The system has two nodes
+    Each file is based on those in boilerPlate with the required additions
+
+Network being modelled
+
+    Host runs Emit and Collect
+    Nodes run an AnyGroupAny
+        these ignore the additional processes required
+
+    Node 1
+        NRFA writes to Host 100
+        NRFA 100 reads from Host
+        AFO writes to Host 102
+
+    Node 2
+        NRFA writes to Host 101
+        NRFA 100 reads from Host
+        AFO writes to Host 102
+
+    Host
+        Emit writes to ONRL using an internal channel
+        ONRL reads from Node1 on 100
+        ONRL reads from Node2 on 101
+        ONRL writes to Node1 100
+        ONRL writes to Node2 on 100
+        AFO reads from 102
+        AFO writes to Collect on an internal channel
+
+            The original diagram you drew is wrong in that you had three net channels
+            going into the AFO that writes to Collect in Host.  You only need one because
+            all the nodes can write to the same Any channel!
+
+Use Gradle to build the project
+
+To run the system
+    in folder builtScripts
+        execute RunHostManifest it will produce some output but then wait for nodes
+        execute RunNode1 you will need to input an integer for the last part of the IP address use 2
+        execute RunNode2 you will need to input an integer for the last part of the IP address use 3
+    The network should run and the RunHostManifest console should show the final answer and everything terminates
+
+The console windows I get are as follows
+
+Host:
+
+"C:\Program Files\AdoptOpenJDK\jdk-13.0.0.33-hotspot\bin\java.exe" ...
+Host running on 127.0.0.1 for 2 worker nodes
+Host waiting for node IPs
+Node  0 = 127.0.0.2
+Node  1 = 127.0.0.3
+Host starting
+3.1417139512195122, RunHostManifest has terminated
+
+Process finished with exit code 0
+
+Node 1
+
+"C:\Program Files\AdoptOpenJDK\jdk-13.0.0.33-hotspot\bin\java.exe" ...
+what is the fourth part of the node's IP-address?  2
+Run Node is located at 127.0.0.2
+Run Node written 127.0.0.2 to host
+Run Node - 127.0.0.2: defining network
+Run Node - 127.0.0.2: defined network
+Node 127.0.0.2 starting
+Run Node - 127.0.0.2: has terminated
+
+Process finished with exit code 0
+
+Node 2
+
+"C:\Program Files\AdoptOpenJDK\jdk-13.0.0.33-hotspot\bin\java.exe" ...
+what is the fourth part of the node's IP-address?  3
+Run Node is located at 127.0.0.3
+Run Node written 127.0.0.3 to host
+Run Node - 127.0.0.3: defining network
+Run Node - 127.0.0.3: defined network
+Node 127.0.0.3 starting
+Run Node - 127.0.0.3: has terminated
+
+Process finished with exit code 0
+
+
+The project now becomes one of working out how to put the required additions into the boilerPlate files to achieve
+those in builtScripts!
+
+This does not load code over the network there are too many changes to the underlying systems in recent times
+due to Java and Groovy changes and it will take time to sort these through.
+
+Java 9+ uses a different set of class loaders to deal with modules
+Groovy 3 takes into account the Java changes and works on Java 9+ but is not that simple
+
+We could go back to Java 8 and a version of Groovy that is compatible, but I tried that and could not get it to work.
+Bluntly if you can generate the require builtScripts and they work then you will have done really well.
+Provided you can justify why we have adopted this approach rather than loading over a network.
+That will be someone else's project once Java and Groovy have settled down.
+
+Hope this all makes sense!
+
+Since then I have constructed versions of the code that run on a real network and these have been added to the github repo.
+
+In Intellij you can create Artifacts and these can be jar files, including jar files for Groovy scripts, see builtNetScripts.
+
+These mirror the ones in built scripts but have the communications added to permit interaction across a network.
+The only bits that change are the initial interactions.  I implemented the version that asks the user to type in the host
+node IP address at each of the nodes.
+
+Creating the jars is to be blunt a bit of a pain becasue the Intellij interface is far from user friendly!
+
+Each jar requires a manifest file that tells the jar the entry point to the code.  It is easiest to put these
+manifests into separate folders.  There are two versions one for the ones that run on a 127 style network and ones that
+run on real networks.  If you do not create these folders intelli overwrites the single manifest directory.
+
+Project Structure tab  as an Artifact tab, in which you can create the artifact description but you need to undertake the
+operations in the correct sequence!!
+I have removed the artifacts that create the 127 style network jars to avoid confusion.
+One crucial thing is to ensure that each artifact is create during a project build.
+
+Once all the jars have been created copy them onto a usb stick so that you can then copy to another machine and run the code.
+
+use the command java -jar 'jarfilename'   eg java -jar RunNetNode1.jar
+
+you must run the host node first and you will need to note the IP address so that you can type it in when requested to the
+other nodes.  The order in which you start the rest does not matter.  I got the network to run on my home 192.168.1.??? network.
+You must make sure that the jar files are available on the machine in some way.  You must not run the jar files from the
+ usb stick because you are likely to remove it and in that case the jar will not find all the libraries it requires.
+
+ I will try to capture the artifact creation process in another document.
+
+Jon
