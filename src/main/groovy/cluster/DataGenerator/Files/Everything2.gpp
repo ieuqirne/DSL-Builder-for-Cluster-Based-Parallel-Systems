@@ -1,0 +1,60 @@
+package cluster.gppScript
+
+import jcsp.lang.*
+import groovyJCSP.*
+
+
+string *new* found in an unexpected place
+ 
+
+PAR network = new PAR()
+ network = new PAR([])
+ network.run()
+ network.removeAllProcesses()
+//END
+
+ 
+import GPP_Library.DataDetails
+import GPP_Library.ResultDetails
+import GPP_Library.functionals.groups.AnyGroupAny
+import GPP_Library.terminals.Collect
+import GPP_Library.terminals.Emit
+import cluster.data.MCpiData
+import cluster.data.MCpiResultsSerialised
+import cluster.data.SerializedMCpiData
+ 
+def emitDetails = new DataDetails(
+dName: MCpiData.getName(),
+dInitMethod: MCpiData.init,
+dInitData: [1024],
+dCreateMethod: MCpiData.create,
+dCreateData: [100000]
+)
+ 
+def resultDetails = new ResultDetails(
+rName: MCpiResultsSerialised.getName(),
+rInitMethod: MCpiResultsSerialised.init,
+rCollectMethod: MCpiResultsSerialised.collector,
+rFinaliseMethod: MCpiResultsSerialised.finalise
+)
+ 
+int workers = 2
+ 
+//@ Emit IP-emit
+def emit = new Emit (
+eDetails: emitDetails
+)
+ 
+//@ Cluster 2
+def group = new AnyGroupAny(
+workers: workers,
+function: SerializedMCpiData.withinOp
+)
+ 
+//@ Collect IP-collect
+def collector = new Collect(
+rDetails: resultDetails
+)
+ 
+ 
+ 

@@ -24,7 +24,7 @@ def resultDetails = new ResultDetails(
     rFinaliseMethod: MCpiResultsSerialised.finalise
 )
 
-int workers = 13
+int workers = 2
 
 //@ Emit IP-emit
 def emit = new Emit (
@@ -37,7 +37,7 @@ def group = new AnyGroupAny(
     function: SerializedMCpiData.withinOp
 )
 
-//' Collect IP-collect
+//@ Collect IP-collect
 def collector = new Collect(
     rDetails: resultDetails
 )

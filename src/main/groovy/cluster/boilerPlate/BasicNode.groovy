@@ -47,6 +47,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now create all the net input channels
 // this bit filled in by Builder
+//@ 1
 
 // inform host that input channels have been created
 hostRequest.write(nodeIP)
@@ -55,7 +56,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now create all the net output channels
 // this bit filled in by Builder
-
+//@ 2
 // inform host that output channels have been created
 hostRequest.write(nodeIP)
 message = hostResponse.read()
@@ -70,5 +71,5 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now invoke Process Manager to run process network
 // this bit filled in by Builder
-
+//@ 3
 println "Run Node - $nodeIP: has terminated"

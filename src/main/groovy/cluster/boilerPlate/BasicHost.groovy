@@ -46,6 +46,7 @@ for ( n in 0 ..< nodes ){
 
 // now create all the net input channels required by Emit and Collect processes
 // this bit is filled in by the Builder for the Emit and Collect processes
+//@ 1
 
 // wait for nodes to have created their net input channels
 for ( n in 0 ..< nodes){
@@ -59,6 +60,7 @@ for ( n in 0 ..< nodes ){
 
 // now create all the net output channels required by the Emit and Collect processes
 // this bit is filled in by the Builder
+// @ 2
 
 // wait for nodes to have created their net output channels
 for ( n in 0 ..< nodes){
@@ -72,7 +74,7 @@ for ( n in 0 ..< nodes ){
 
 // now define the processes required at host node Emit, Collect plus typically ONRL and AFO
 // this bit filled in by Builder
-
+// @ 3
 // wait for nodes to have defined their processes
 for ( n in 0 ..< nodes){
   String message = hostRequest.read()  //message will be one of the nodeIP value
@@ -85,5 +87,5 @@ for ( n in 0 ..< nodes ){
 
 // now invoke a Process Manager to run the processes
 // this bit filled in by Builder
-
+// @ 4
 println "RunHost has terminated"
