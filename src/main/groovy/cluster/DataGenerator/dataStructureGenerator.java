@@ -8,16 +8,32 @@ import java.util.ArrayList;
 public class dataStructureGenerator {
     public static void main(String[] args) throws Exception
     {
-        GPPlexFileHanding fileHan = new GPPlexFileHanding();
-
         ArrayList<Integer> ListWorkers = new ArrayList<>();
         ArrayList<Integer> ListEmitInputs = new ArrayList<>();
         ArrayList<Integer> ListCollectInput = new ArrayList<>();
         ArrayList<Integer> ListNodesInputs = new ArrayList<>();
 
+        boolean emitDBoolean = false;
+        boolean resDBoolean = false;
+        boolean emBoolean = false;
+        boolean colBoolean = false;
+        boolean chaDefBoolean = false;
+
+        String emitDetailsSt = "emitDetails";
+        String resultDetailsSt = "resultDetails";
+
+        ArrayList<String> ListEmitDetails = new ArrayList<>();
+        ArrayList<String> ListResultDetails = new ArrayList<>();
+
         String[] words = null;
         String st;
         String workersString = "workers";
+        String def = "def";
+
+        String emitSt = "emit";
+        String groupSt = "group";
+        String collectorSt = "collector";
+        String closing = ")";
         //Reading the file
         String filePath = new File("").getAbsolutePath();
         //System.out.println(filePath);
@@ -36,9 +52,33 @@ public class dataStructureGenerator {
                 {
                     ListWorkers.add( Integer.parseInt(words[x+2]));    //If Present increase the count by one
                 }
+                if (words[x].equals(def))   //Search for the given word
+                {
+                    if(words[x+1].equals(emitDetailsSt))
+                        emitDBoolean = true;
+                    if(words[x+1].equals(resultDetailsSt))
+                        resDBoolean = true;
+                    /*if(words[x+1].equals(emitDetailsSt))
+                        emBoolean = true;
+                    if(words[x+1].equals(emitDetailsSt))
+                        emBoolean = true;
+                    if(words[x+1].equals(emitDetailsSt))
+                        emBoolean = true;*/
+                }
+                if(emitDBoolean)
+                    ListEmitDetails.add(words[x]);
+                if(resDBoolean)
+                    ListResultDetails.add(words[x]);
+
+
+                if (words[x].equals(closing) && emitDBoolean)
+                    emitDBoolean = false;
+                if (words[x].equals(closing) && resDBoolean)
+                    resDBoolean = false;
             }
         }
-        System.out.print("List of Nodes Workers: ");
+
+        System.out.print("\nList of Nodes Workers: ");
         for (int workers : ListWorkers){
             System.out.print(workers);
         }
@@ -137,18 +177,19 @@ public class dataStructureGenerator {
         for(int x = 0; x < ListWorkers.get(0); x++) {
             System.out.println("responseListONRL.append(outChan"+ (x+1) +")");
         }
-        String def = "def";
-        while ((st = reader.readLine()) != null) {
-            words = st.split("\\s+");  //Split the word using space
-            for (int x = 0; x < words.length; x ++)
-            {
-                System.out.println(words[x]);
-                if (words[x].equals(def))   //Search for the given word
-                {
-                    System.out.println("Hey!");
-                    ListWorkers.add( Integer.parseInt(words[x+2]));    //If Present increase the count by one
-                }
-            }
+        System.out.println("\n");
+        //System.out.println(ListEmitDetails);
+        for(String model : ListEmitDetails) {
+            System.out.print(model + " ");
+            if(model.endsWith(","))
+                System.out.println();
         }
+        System.out.println("\n");
+        for(String model : ListResultDetails) {
+            System.out.print(model + " ");
+            if(model.endsWith(","))
+                System.out.println();
+        }
+
     }
 }
