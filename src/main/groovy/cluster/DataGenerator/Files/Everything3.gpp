@@ -1,9 +1,0 @@
-package cluster.gppScript
-
-import jcsp.lang.*
-import groovyJCSP.*
-
-
-string *new* found in an unexpected place
- 
-
