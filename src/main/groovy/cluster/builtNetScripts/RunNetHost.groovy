@@ -37,6 +37,7 @@ def hostAddress = new TCPIPNodeAddress(1000)
 // the rest of the script is common to all network environments
 Node.getInstance().init(hostAddress)
 String hostIP = hostAddress.getIpAddress()
+
 println "Host running on $hostIP for $nodes worker nodes"
 
 // create request channel
@@ -107,35 +108,35 @@ responseListONRL.append(outChan2)
 // now create the node's processes - derived from cluster definition script
 // uses some previously created net channels
 def emitDetails = new DataDetails(dName: MCpiData.getName(),
-    dInitMethod: MCpiData.init,
-    dInitData: [2048],
-    dCreateMethod: MCpiData.create,
-    dCreateData: [1000000]
+        dInitMethod: MCpiData.init,
+        dInitData: [2048],
+        dCreateMethod: MCpiData.create,
+        dCreateData: [1000000]
 )
 
 def resultDetails = new ResultDetails(rName: MCpiResultsSerialised.getName(),
-    rInitMethod: MCpiResultsSerialised.init,
-    rCollectMethod: MCpiResultsSerialised.collector,
-    rFinaliseMethod: MCpiResultsSerialised.finalise
+        rInitMethod: MCpiResultsSerialised.init,
+        rCollectMethod: MCpiResultsSerialised.collector,
+        rFinaliseMethod: MCpiResultsSerialised.finalise
 )
 
 def emit = new Emit (
-    eDetails: emitDetails,
-    output: chan1.out()
+        eDetails: emitDetails,
+        output: chan1.out()
 )
 def onrl = new OneNodeRequestedList(
-    request: requestListONRL,
-    response: responseListONRL,
-    input: chan1.in()
+        request: requestListONRL,
+        response: responseListONRL,
+        input: chan1.in()
 )
 def afo = new AnyFanOne(
-    inputAny: inChan3,
-    output: chan2.out(),
-    sources: nodes
+        inputAny: inChan3,
+        output: chan2.out(),
+        sources: nodes
 )
 def collector = new Collect(
-    input: chan2.in(),
-    rDetails: resultDetails
+        input: chan2.in(),
+        rDetails: resultDetails
 )
 
 
@@ -158,4 +159,3 @@ println "Host starting"
 new PAR([emit, onrl, afo, collector]).run()
 
 println "RunHost has terminated"
-

@@ -82,21 +82,21 @@ int workers = 4   //copied from cluster definition file
 def chan1 = Channel.one2any()
 def chan2 = Channel.any2one()
 def nrfa = new NodeRequestingFanAny(
-    request: outChan1,
-    response: inChan1,
-    outputAny: chan1.out(),
-    destinations: workers
+        request: outChan1,
+        response: inChan1,
+        outputAny: chan1.out(),
+        destinations: workers
 )
 def group = new AnyGroupAny(
-    inputAny: chan1.in(),
-    outputAny: chan2.out(),
-    workers: workers,
-    function: SerializedMCpiData.withinOp
+        inputAny: chan1.in(),
+        outputAny: chan2.out(),
+        workers: workers,
+        function: SerializedMCpiData.withinOp
 )
 def afo = new AnyFanOne(
-    inputAny: chan2.in(),
-    output: outChan2,
-    sources: workers
+        inputAny: chan2.in(),
+        output: outChan2,
+        sources: workers
 )
 println "Run Node - $nodeIP: defined network"
 
