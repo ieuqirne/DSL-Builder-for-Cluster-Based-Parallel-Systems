@@ -13,6 +13,7 @@ public class dataStructureGenerator {
         ArrayList<Integer> ListCollectInput = new ArrayList<>();
         ArrayList<Integer> ListNodesInputs = new ArrayList<>();
 
+        boolean importBoolean = false;
         boolean emitDBoolean = false;
         boolean resDBoolean = false;
         boolean emBoolean = false;
@@ -20,20 +21,24 @@ public class dataStructureGenerator {
         boolean chaDefBoolean = false;
 
         String emitDetailsSt = "emitDetails";
-        String resultDetailsSt = "resultDetails";
-
+        String resultDetailsSt = "resultDetails"
+                ;
+        ArrayList<String> ListImports = new ArrayList<>();
         ArrayList<String> ListEmitDetails = new ArrayList<>();
         ArrayList<String> ListResultDetails = new ArrayList<>();
+        ArrayList<String> ListEmit = new ArrayList<>();
 
         String[] words = null;
         String st;
         String workersString = "workers";
-        String def = "def";
+        String defString = "def";
+        String importString = "import";
 
         String emitSt = "emit";
         String groupSt = "group";
         String collectorSt = "collector";
-        String closing = ")";
+        String closingBracket = ")";
+        String openingBracket = "(";
         //Reading the file
         String filePath = new File("").getAbsolutePath();
         //System.out.println(filePath);
@@ -48,33 +53,46 @@ public class dataStructureGenerator {
             words = st.split("\\s+");  //Split the word using space
             for (int x = 0; x < words.length; x ++)
             {
+
+                if(words[x].equals(importString)&& importBoolean == false)
+                {
+                    importBoolean = true;
+                }
                 if (words[x].equals(workersString))   //Search for the given word
                 {
                     ListWorkers.add( Integer.parseInt(words[x+2]));    //If Present increase the count by one
                 }
-                if (words[x].equals(def))   //Search for the given word
+                if (words[x].equals(defString))   //Search for the given word
                 {
                     if(words[x+1].equals(emitDetailsSt))
                         emitDBoolean = true;
                     if(words[x+1].equals(resultDetailsSt))
                         resDBoolean = true;
-                    /*if(words[x+1].equals(emitDetailsSt))
+                    if(words[x+1].equals(emitSt))
                         emBoolean = true;
-                    if(words[x+1].equals(emitDetailsSt))
+                    /*if(words[x+1].equals(emitDetailsSt))
                         emBoolean = true;
                     if(words[x+1].equals(emitDetailsSt))
                         emBoolean = true;*/
                 }
+
+                if(importBoolean)
+                    ListImports.add(words[x]);
                 if(emitDBoolean)
                     ListEmitDetails.add(words[x]);
                 if(resDBoolean)
                     ListResultDetails.add(words[x]);
+                if(emBoolean)
 
 
-                if (words[x].equals(closing) && emitDBoolean)
+                if(x == 0 && !words[x].equals(importString) && importBoolean)
+                    importBoolean = false;
+                if (words[x].equals(closingBracket) && emitDBoolean)
                     emitDBoolean = false;
-                if (words[x].equals(closing) && resDBoolean)
+                if (words[x].equals(closingBracket) && resDBoolean)
                     resDBoolean = false;
+                if (words[x].equals(closingBracket) && emBoolean)
+                    emBoolean = false;
             }
         }
 
@@ -96,6 +114,54 @@ public class dataStructureGenerator {
         for (int x = 0; x < ListWorkers.get(0) ; x++){
             ListNodesInputs.add(100);
             System.out.print(ListNodesInputs.get(x) +" ");
+        }
+
+        System.out.println(" ");
+        for(String model : ListImports) {
+            if(model.equals(importString))
+                System.out.println();
+            System.out.print(model + " ");
+
+        }
+        System.out.println("\n");
+
+        for(int x = 0; x <= ListWorkers.get(0); x++)
+        {
+            int temp = 100 + x;
+            System.out.println("NetChannelInput inChan" + (x+1) + " = NetChannel.numberedNet2One(" + temp + ")");
+        }
+
+        System.out.println(" ");
+        for(int x = 0; x < ListWorkers.get(0); x++) {
+            System.out.println("def otherNode"+ (x+1) +"Address = new TCPIPNodeAddress(nodeIPs["+ x +"], 1000)");
+            System.out.println("NetChannelOutput outChan"+ (x+1) +" = NetChannel.one2net(otherNode"+ (x+1) +"Address, 100)");
+        }
+
+        System.out.println(" ");
+
+        for(int x = 0; x < 2; x++) {
+            System.out.println("def chan"+ (x+1) +" = Channel.one2one()");
+        }
+        System.out.println("def requestListONRL = new ChannelInputList()");
+        for(int x = 0; x < ListWorkers.get(0); x++) {
+            System.out.println("requestListONRL.append(inChan" + (x + 1) + ")");
+        }
+        System.out.println("def responseListONRL = new ChannelOutputList()");
+        for(int x = 0; x < ListWorkers.get(0); x++) {
+            System.out.println("responseListONRL.append(outChan"+ (x+1) +")");
+        }
+        System.out.println("\n");
+        System.out.println(ListEmitDetails);
+        for(String model : ListEmitDetails) {
+            System.out.print(model + " ");
+            if(model.endsWith(","))
+                System.out.println();
+        }
+        System.out.println("\n");
+        for(String model : ListResultDetails) {
+            System.out.print(model + " ");
+            if(model.endsWith(","))
+                System.out.println();
         }
 
 
@@ -150,46 +216,5 @@ public class dataStructureGenerator {
             System.out.println("\nAn error occurred on file EmitStructure.");
             e.printStackTrace();
         }
-
-        System.out.println(" ");
-        for(int x = 0; x <= ListWorkers.get(0); x++)
-        {
-            int temp = 100 + x;
-            System.out.println("NetChannelInput inChan" + (x+1) + " = NetChannel.numberedNet2One(" + temp + ")");
-        }
-
-        System.out.println(" ");
-        for(int x = 0; x < ListWorkers.get(0); x++) {
-            System.out.println("def otherNode"+ (x+1) +"Address = new TCPIPNodeAddress(nodeIPs["+ x +"], 1000)");
-            System.out.println("NetChannelOutput outChan"+ (x+1) +" = NetChannel.one2net(otherNode"+ (x+1) +"Address, 100)");
-        }
-
-        System.out.println(" ");
-
-        for(int x = 0; x < 2; x++) {
-            System.out.println("def chan"+ (x+1) +" = Channel.one2one()");
-        }
-        System.out.println("def requestListONRL = new ChannelInputList()");
-        for(int x = 0; x < ListWorkers.get(0); x++) {
-            System.out.println("requestListONRL.append(inChan" + (x + 1) + ")");
-        }
-        System.out.println("def responseListONRL = new ChannelOutputList()");
-        for(int x = 0; x < ListWorkers.get(0); x++) {
-            System.out.println("responseListONRL.append(outChan"+ (x+1) +")");
-        }
-        System.out.println("\n");
-        //System.out.println(ListEmitDetails);
-        for(String model : ListEmitDetails) {
-            System.out.print(model + " ");
-            if(model.endsWith(","))
-                System.out.println();
-        }
-        System.out.println("\n");
-        for(String model : ListResultDetails) {
-            System.out.print(model + " ");
-            if(model.endsWith(","))
-                System.out.println();
-        }
-
     }
 }

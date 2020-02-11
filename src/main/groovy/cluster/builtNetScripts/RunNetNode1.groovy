@@ -77,7 +77,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 println "Run Node - $nodeIP: defining network"
 
 // now define the processes for the node including the additional ones required
-int workers = 4   //copied from cluster definition file
+int workers = 2   //copied from cluster definition file
 
 def chan1 = Channel.one2any()
 def chan2 = Channel.any2one()

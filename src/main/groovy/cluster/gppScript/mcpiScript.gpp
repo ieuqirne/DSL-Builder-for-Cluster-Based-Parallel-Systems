@@ -24,7 +24,7 @@ def resultDetails = new ResultDetails(
     rFinaliseMethod: MCpiResultsSerialised.finalise
 )
 
-int workers = 4
+int workers = 3
 
 //@ Emit IP-emit
 def emit = new Emit (

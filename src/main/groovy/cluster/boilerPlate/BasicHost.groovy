@@ -4,14 +4,15 @@ import groovyJCSP.ChannelOutputList
 import jcsp.net2.NetChannel
 import jcsp.net2.Node
 import jcsp.net2.tcpip.TCPIPNodeAddress
-
+// @ imports
 
 /**
  * The script used to create a host process network containing an emit and collector processes.
  * Thus BasicHost has to be modified for each solution.
  */
+// this value should be modified using clusterScript.gpp by the Builder from
 
-int nodes = 0   // this value should be modified using clusterScript.gpp by the Builder from //@ Cluster integer
+// @ NumberNodes
 
 // this part works on a loop-back network and
 // should be commented out when running on a real network
@@ -46,7 +47,8 @@ for ( n in 0 ..< nodes ){
 
 // now create all the net input channels required by Emit and Collect processes
 // this bit is filled in by the Builder for the Emit and Collect processes
-//@ 1
+
+// @ InputsChannelCreations
 
 // wait for nodes to have created their net input channels
 for ( n in 0 ..< nodes){
@@ -60,7 +62,7 @@ for ( n in 0 ..< nodes ){
 
 // now create all the net output channels required by the Emit and Collect processes
 // this bit is filled in by the Builder
-// @ 2
+// @ OutputsChannelCreation
 
 // wait for nodes to have created their net output channels
 for ( n in 0 ..< nodes){
@@ -74,7 +76,9 @@ for ( n in 0 ..< nodes ){
 
 // now define the processes required at host node Emit, Collect plus typically ONRL and AFO
 // this bit filled in by Builder
-// @ 3
+
+// @ ProcessDefinition
+
 // wait for nodes to have defined their processes
 for ( n in 0 ..< nodes){
   String message = hostRequest.read()  //message will be one of the nodeIP value
@@ -87,5 +91,7 @@ for ( n in 0 ..< nodes ){
 
 // now invoke a Process Manager to run the processes
 // this bit filled in by Builder
-// @ 4
+
+// @ ProcessManager
+
 println "RunHost has terminated"
