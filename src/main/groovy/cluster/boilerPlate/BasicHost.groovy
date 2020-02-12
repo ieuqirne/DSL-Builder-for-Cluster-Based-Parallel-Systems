@@ -4,7 +4,7 @@ import groovyJCSP.ChannelOutputList
 import jcsp.net2.NetChannel
 import jcsp.net2.Node
 import jcsp.net2.tcpip.TCPIPNodeAddress
-// @ imports
+// @ Imports
 
 /**
  * The script used to create a host process network containing an emit and collector processes.
@@ -12,7 +12,9 @@ import jcsp.net2.tcpip.TCPIPNodeAddress
  */
 // this value should be modified using clusterScript.gpp by the Builder from
 
+//int nodes = 0
 // @ NumberNodes
+
 
 // this part works on a loop-back network and
 // should be commented out when running on a real network
