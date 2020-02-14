@@ -1,4 +1,0 @@
-NetChannelInput inChan1 = NetChannel.numberedNet2One(100)
-NetChannelInput inChan2 = NetChannel.numberedNet2One(101)
-NetChannelInput inChan3 = NetChannel.numberedNet2One(102)
-NetChannelInput inChan4 = NetChannel.numberedNet2One(103)
