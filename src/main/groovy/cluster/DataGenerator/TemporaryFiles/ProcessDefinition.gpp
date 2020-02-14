@@ -1,0 +1,42 @@
+def chan1 = Channel.one2one()
+def chan2 = Channel.one2one()
+def requestListONRL = new ChannelInputList()
+requestListONRL.append(inChan1)
+requestListONRL.append(inChan2)
+requestListONRL.append(inChan3)
+def responseListONRL = new ChannelOutputList()
+responseListONRL.append(outChan1)
+responseListONRL.append(outChan2)
+responseListONRL.append(outChan3)
+
+def emitDetails = new DataDetails( 
+ dName: MCpiData.getName(), 
+ dInitMethod: MCpiData.init, 
+ dInitData: [1024], 
+ dCreateMethod: MCpiData.create, 
+ dCreateData: [100000] 
+) 
+def resultDetails = new ResultDetails( 
+ rName: MCpiResultsSerialised.getName(), 
+ rInitMethod: MCpiResultsSerialised.init, 
+ rCollectMethod: MCpiResultsSerialised.collector, 
+ rFinaliseMethod: MCpiResultsSerialised.finalise 
+) 
+def emit = new Emit ( 
+ eDetails: emitDetails, 
+ output: chanl.out() 
+) 
+def onrl = new OneNodeRequestedList(
+ request: requestListONRL,
+ response: responseListONRL,
+ input: chan1.in()
+)
+def afo = new AnyFanOne(
+ inputAny: inChan31,
+ output: chan2.out(),
+ sources: nodes
+)
+def collector = new Collect( 
+ rDetails: resultDetails, 
+ output: chanl.out() 
+) 

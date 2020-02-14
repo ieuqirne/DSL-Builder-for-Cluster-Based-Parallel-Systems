@@ -1,19 +1,23 @@
 package cluster.boilerPlate
 
+import groovyJCSP.PAR
+import jcsp.lang.Channel
+import jcsp.net2.NetChannel
+import jcsp.net2.NetChannelInput
+import jcsp.net2.NetChannelOutput
+import groovyJCSP.ChannelInputList
 import groovyJCSP.ChannelOutputList
 import jcsp.net2.NetChannel
 import jcsp.net2.Node
 import jcsp.net2.tcpip.TCPIPNodeAddress
-// @ Imports
+// @Imports
 
 /**
  * The script used to create a host process network containing an emit and collector processes.
  * Thus BasicHost has to be modified for each solution.
  */
 // this value should be modified using clusterScript.gpp by the Builder from
-
-//int nodes = 0
-// @ NumberNodes
+// @NumberNodes
 
 
 // this part works on a loop-back network and
@@ -50,7 +54,7 @@ for ( n in 0 ..< nodes ){
 // now create all the net input channels required by Emit and Collect processes
 // this bit is filled in by the Builder for the Emit and Collect processes
 
-// @ InputsChannelCreations
+// @InputsChannelCreations
 
 // wait for nodes to have created their net input channels
 for ( n in 0 ..< nodes){
@@ -64,7 +68,7 @@ for ( n in 0 ..< nodes ){
 
 // now create all the net output channels required by the Emit and Collect processes
 // this bit is filled in by the Builder
-// @ OutputsChannelCreation
+// @OutputsChannelCreation
 
 // wait for nodes to have created their net output channels
 for ( n in 0 ..< nodes){
@@ -79,7 +83,7 @@ for ( n in 0 ..< nodes ){
 // now define the processes required at host node Emit, Collect plus typically ONRL and AFO
 // this bit filled in by Builder
 
-// @ ProcessDefinition
+// @ProcessDefinition
 
 // wait for nodes to have defined their processes
 for ( n in 0 ..< nodes){
@@ -94,6 +98,6 @@ for ( n in 0 ..< nodes ){
 // now invoke a Process Manager to run the processes
 // this bit filled in by Builder
 
-// @ ProcessManager
+// @ProcessManager
 
 println "RunHost has terminated"

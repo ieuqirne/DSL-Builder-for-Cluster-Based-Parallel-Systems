@@ -1,0 +1,6 @@
+def otherNode1Address = new TCPIPNodeAddress(nodeIPs[0], 1000)
+NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 100)
+def otherNode2Address = new TCPIPNodeAddress(nodeIPs[1], 1000)
+NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 100)
+def otherNode3Address = new TCPIPNodeAddress(nodeIPs[2], 1000)
+NetChannelOutput outChan3 = NetChannel.one2net(otherNode3Address, 100)
