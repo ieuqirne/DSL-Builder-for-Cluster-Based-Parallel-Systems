@@ -36,11 +36,11 @@ int nodes = 3
  
 // this part works on a loop-back network and 
 // should be commented out when running on a real network 
-String hostIP127 = "127.0.0.1" 
-def hostAddress = new TCPIPNodeAddress(hostIP127, 1000) 
+//String hostIP127 = "127.0.0.1" 
+//def hostAddress = new TCPIPNodeAddress(hostIP127, 1000) 
  
 // this part works on a real network 
-//def hostAddress = new TCPIPNodeAddress(1000) 
+def hostAddress = new TCPIPNodeAddress(1000) 
  
 // the rest of the script is common to all network environments 
 Node.getInstance().init(hostAddress) 
@@ -136,7 +136,7 @@ def resultDetails = new ResultDetails(
 ) 
 def emit = new Emit ( 
  eDetails: emitDetails, 
- output: chanl.out() 
+ output: chan1.out() 
 ) 
 def onrl = new OneNodeRequestedList( 
  request: requestListONRL, 
@@ -144,13 +144,13 @@ def onrl = new OneNodeRequestedList(
  input: chan1.in() 
 ) 
 def afo = new AnyFanOne( 
- inputAny: inChan31, 
+ inputAny: inChan4, 
  output: chan2.out(), 
  sources: nodes 
 ) 
 def collector = new Collect( 
- rDetails: resultDetails, 
- output: chanl.out() 
+ input: chan2.in(), 
+ rDetails: resultDetails 
 ) 
  
  

@@ -24,7 +24,7 @@ def resultDetails = new ResultDetails(
 ) 
 def emit = new Emit ( 
  eDetails: emitDetails, 
- output: chanl.out() 
+ output: chan1.out() 
 ) 
 def onrl = new OneNodeRequestedList(
  request: requestListONRL,
@@ -32,11 +32,11 @@ def onrl = new OneNodeRequestedList(
  input: chan1.in()
 )
 def afo = new AnyFanOne(
- inputAny: inChan31,
+ inputAny: inChan4,
  output: chan2.out(),
  sources: nodes
 )
 def collector = new Collect( 
- rDetails: resultDetails, 
- output: chanl.out() 
+ input: chan2.in(),
+ rDetails: resultDetails 
 ) 

@@ -2,9 +2,18 @@ package cluster.boilerPlate
 
 import jcsp.net2.NetChannel
 import jcsp.net2.NetChannelInput
+import GPP_Library.cluster.connectors.NodeRequestingFanAny //added from Enrique
+import groovyJCSP.PAR
+import jcsp.lang.Channel
+import jcsp.net2.NetChannel
+import jcsp.net2.NetChannelInput
+import jcsp.net2.NetChannelOutput
+import jcsp.net2.NetChannelOutput //added from Enrique
 import jcsp.net2.Node
 import jcsp.net2.tcpip.TCPIPNodeAddress
 import jcsp.userIO.Ask
+
+// @Imports
 
 /**
  * The script used to create a node process network containing an emit and collector processes.
@@ -47,7 +56,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now create all the net input channels
 // this bit filled in by Builder
-//@ 1
+// @InputsChannelCreation
 
 // inform host that input channels have been created
 hostRequest.write(nodeIP)
@@ -56,13 +65,16 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now create all the net output channels
 // this bit filled in by Builder
-//@ 2
+// @OutputsChannelCreation
+
+
 // inform host that output channels have been created
 hostRequest.write(nodeIP)
 message = hostResponse.read()
 assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $message : output channel creation"
 
 // now define the processes for the node including the additional ones required
+// @ProcessDefinition
 
 // inform host that process network has been defined
 hostRequest.write(nodeIP)
@@ -71,5 +83,6 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now invoke Process Manager to run process network
 // this bit filled in by Builder
-//@ 3
+// @ProcessManager
+
 println "Run Node - $nodeIP: has terminated"

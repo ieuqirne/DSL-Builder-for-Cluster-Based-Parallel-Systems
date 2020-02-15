@@ -31,6 +31,8 @@ public class dataStructureGenerator {
         ArrayList<String> ListEmit = new ArrayList<>();
         ArrayList<String> ListCol = new ArrayList<>();
         ArrayList<String> ListBasicHost = new ArrayList<>();
+        ArrayList<String> ListBasicNode = new ArrayList<>();
+
 
         ArrayList<String> ListImportsFile = new ArrayList<>();
         ArrayList<String> ListNumbersNodeFile = new ArrayList<>();
@@ -44,9 +46,11 @@ public class dataStructureGenerator {
         String st;
 
         int typeConection = 0;
+        int defCounter = 0;
+
         String requestType = "";
         String responseType = "";
-        int defCounter = 0;
+        String fNameFromScripts = "";
         ArrayList<String> defStringNames = new ArrayList<>();
 
         //Reading the file
@@ -106,7 +110,8 @@ public class dataStructureGenerator {
                     if(words[x+1].equals("collector"))
                         colBoolean = true;
                 }
-
+                if (words[x].equals("function:"))
+                        fNameFromScripts = words[x+1];
 
                 if(importBoolean) {
                     ListImports.add(words[x]);
@@ -153,6 +158,8 @@ public class dataStructureGenerator {
             if(colBoolean)
                 ListCol.add("\n");
 
+
+
         }
 
         //Adding ListLibraries to ListImports. ListLibraries will be different depending of the type of
@@ -160,95 +167,7 @@ public class dataStructureGenerator {
         for (String model : ListLibraries){
             ListImports.add(model);
         }
-        /*
-        System.out.print("\nList of Nodes Workers: ");
-        //for (int workers : ListWorkers){
-            System.out.print(numberWorkers);
-        //}
-        System.out.print("\nList of Emit Inputs: ");
-        for (int x = 0; x < numberWorkers ;x ++){
-            ListEmitInputs.add(100+x);
-            System.out.print(ListEmitInputs.get(x) +" ");
-        }
-        System.out.print("\nList of Collects Inputs: ");
-        ListCollectInput.add(100+ numberWorkers);
-        for (int x = 0; x < ListCollectInput.size() ; x++){
-            System.out.print(ListCollectInput.get(x) +" ");
-        }
-        System.out.print("\nList of Nodes Inputs: ");
-        for (int x = 0; x < numberWorkers ; x++){
-            ListNodesInputs.add(100);
-            System.out.print(ListNodesInputs.get(x) +" ");
-        }
 
-        System.out.println("\n");
-
-        for(String model : ListImports) {
-            System.out.print(model);
-        }
-
-        System.out.println("\n");
-        for(int x = 0; x <= numberWorkers; x++)
-        {
-            int temp = 100 + x;
-            System.out.println("NetChannelInput inChan" + (x+1) + " = NetChannel.numberedNet2One(" + temp + ")");
-        }
-
-        System.out.println(" ");
-        for(int x = 0; x < numberWorkers; x++) {
-            System.out.println("def otherNode"+ (x+1) +"Address = new TCPIPNodeAddress(nodeIPs["+ x +"], 1000)");
-            System.out.println("NetChannelOutput outChan"+ (x+1) +" = NetChannel.one2net(otherNode"+ (x+1) +"Address, 100)");
-        }
-
-        for(int x = 0; x < 2; x++) {
-            System.out.println("def chan"+ (x+1) +" = Channel.one2one()");
-        }
-        System.out.println("def "+ requestType +" = new ChannelInputList()");
-        for(int x = 0; x < numberWorkers; x++) {
-            System.out.println(requestType +".append(inChan" + (x + 1) + ")");
-        }
-        System.out.println("def "+ responseType +" = new ChannelOutputList()");
-        for(int x = 0; x < numberWorkers; x++) {
-            System.out.println(responseType + ".append(outChan"+ (x+1) +")");
-        }
-        System.out.println("\n");
-        //System.out.println(ListEmitDetails);
-        for(String model : ListEmitDetails) {
-            System.out.print(model);
-        }
-        System.out.println("\n");
-        for(String model : ListResultDetails) {
-            System.out.print(model);
-        }
-
-        System.out.println("\n");
-        for(String model : ListEmit) {
-            System.out.print(model);
-            if(model.equals("emitDetails"))
-                System.out.print(", \n output: chanl.out()");
-        }
-
-        System.out.print("\ndef onrl = new OneNodeRequestedList(\n");
-        System.out.print(" request: "+ requestType +"(\n");
-        System.out.print(" request: "+ responseType +"(\n");
-        System.out.print(" input: chan1.in()\n)");
-
-        System.out.print("\ndef afo = new AnyFanOne(\n");
-        System.out.print(" inputAny: inChan"+ numberWorkers+1 +",\n");
-        System.out.print(" output: chan2.out(),\n");
-        System.out.print(" sources: nodes\n)");
-
-        System.out.println();
-        for(String model : ListCol) {
-            System.out.print(model);
-            if(model.equals("resultDetails"))
-                System.out.print(", \n anoutput: chl.out()");
-        }
-
-        //ProcessManager PrintOuts
-        System.out.println("\n");
-        System.out.println("new PAR(["+ defStringNames.get(defStringNames.size()-3) +", onrl, afo, "+ defStringNames.get(defStringNames.size()-1) +"]).run()");
-        */
         dataStructureGenerator.createFileImports(tempOutPutfilePath,numberWorkers,ListImports);
 
         dataStructureGenerator.createFileNumberNodes(tempOutPutfilePath, numberWorkers);
@@ -262,7 +181,7 @@ public class dataStructureGenerator {
 
         dataStructureGenerator.createFileProcessManager(tempOutPutfilePath,defStringNames);
 
-
+        //Read each file one by one and introduce everything into arrays also adding WhiteSpaces and Line Feeds
 
         BufferedReader readerBasicHost = new BufferedReader(new FileReader(filePath + "\\src\\main\\groovy\\cluster\\boilerPlate\\BasicHost.groovy"));
         while ((st = readerBasicHost.readLine()) != null) {
@@ -426,7 +345,84 @@ public class dataStructureGenerator {
             e.printStackTrace();
         }
 
+        //CreatingNodesFiles
+        //Reading BasicNode.groovy and inserting into ArrayList
+        BufferedReader readerBasicNode = new BufferedReader(new FileReader(filePath + "\\src\\main\\groovy\\cluster\\boilerPlate\\BasicNode.groovy"));
+        while ((st = readerBasicNode.readLine()) != null) {
+            words = st.split("\\s+");  //Split the word using space
+            for (int x = 0; x < words.length; x++){
+                ListBasicNode.add(words[x]);
+                ListBasicNode.add(" ");
+            }
+            ListBasicNode.add("\n");
+        }
 
+        for(int i = 0; i < numberWorkers; i++){
+
+            try {
+                FileWriter WorkerNodeFileWriter = new FileWriter(outPutfilePath + "NodeWorker"+(i+1)+".groovy");
+                for (int x = 0; x < ListBasicNode.size(); x++){
+                    WorkerNodeFileWriter.write(ListBasicNode.get(x));
+                    if(ListBasicNode.get(x).equals("@Imports"))
+                    {
+                        WorkerNodeFileWriter.write("\n");
+                        for(String model : ListImportsFile){
+                            WorkerNodeFileWriter.write(model);
+                        }
+                    }
+                    if(ListBasicNode.get(x).equals("@InputsChannelCreations")){
+                        WorkerNodeFileWriter.write("\nNetChannelInput inChan1 = NetChannel.numberedNet2One(100)\n");
+                    }
+                    if(ListBasicNode.get(x).equals("@OutputsChannelCreation"))
+                    {
+                        WorkerNodeFileWriter.write("\ndef otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)\n" +
+                                            "NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 100)\n" +
+                                            "def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)\n" +
+                                            "NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 10"+numberWorkers+")");
+
+                    }
+
+                    if(ListBasicNode.get(x).equals("@ProcessDefinition")){
+
+                        WorkerNodeFileWriter.write("\nint workers = " + numberWorkers);
+                        WorkerNodeFileWriter.write("\ndef chan1 = Channel.one2any()\n" +
+                                                        "def chan2 = Channel.any2one()\n" +
+                                                        "def nrfa = new NodeRequestingFanAny(\n" +
+                                                        "        request: outChan1,\n" +
+                                                        "        response: inChan1,\n" +
+                                                        "        outputAny: chan1.out(),\n" +
+                                                        "        destinations: workers\n" +
+                                                        ")\n" +
+                                                        "def group = new AnyGroupAny(\n" +
+                                                        "        inputAny: chan1.in(),\n" +
+                                                        "        outputAny: chan2.out(),\n" +
+                                                        "        workers: workers,\n" +
+                                                        "        function: "+ fNameFromScripts +"\n" +
+                                                        ")\n" +
+                                                        "def afo = new AnyFanOne(\n" +
+                                                        "        inputAny: chan2.in(),\n" +
+                                                        "        output: outChan2,\n" +
+                                                        "        sources: workers\n" +
+                                                        ")");
+
+                    }
+                    if(ListBasicNode.get(x).equals("@ProcessManager")){
+                        WorkerNodeFileWriter.write("\nnew PAR([nrfa, group, afo]).run()");
+                    }
+
+                }
+                WorkerNodeFileWriter.close();
+
+                System.out.println("Successfully wrote to the file WorkerNode"+numberWorkers+".gpp");
+            } catch (IOException e) {
+                System.out.println("An error occurred on file WorkerNode"+numberWorkers+".gpp");
+                e.printStackTrace();
+            }
+
+
+
+
+        }
 
     }
 
@@ -534,7 +530,7 @@ public class dataStructureGenerator {
             for(String model : ListEmit) {
                 ProDefFileWriter.write(model);
                 if(model.equals("emitDetails"))
-                    ProDefFileWriter.write(", \n output: chanl.out()");
+                    ProDefFileWriter.write(", \n output: chan1.out()");
 
             }
             ProDefFileWriter.write("\ndef onrl = new OneNodeRequestedList(\n");
@@ -543,15 +539,17 @@ public class dataStructureGenerator {
             ProDefFileWriter.write(" input: chan1.in()\n)");
 
             ProDefFileWriter.write("\ndef afo = new AnyFanOne(\n");
-            ProDefFileWriter.write(" inputAny: inChan"+ numberWorkers+1 +",\n");
+            ProDefFileWriter.write(" inputAny: inChan"+ (numberWorkers+1) +",\n");
             ProDefFileWriter.write(" output: chan2.out(),\n");
             ProDefFileWriter.write(" sources: nodes\n)");
 
             ProDefFileWriter.write("\n");
             for(String model : ListCol) {
+
+                if(model.equals("rDetails:"))
+                    ProDefFileWriter.write("input: chan2.in(),\n ");
                 ProDefFileWriter.write(model);
-                if(model.equals("resultDetails"))
-                    ProDefFileWriter.write(", \n output: chanl.out()");
+
             }
             ProDefFileWriter.close();
 
