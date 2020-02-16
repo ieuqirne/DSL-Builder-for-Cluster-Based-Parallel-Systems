@@ -30,17 +30,17 @@ import GPP_Library.connectors.reducers.AnyFanOne
  */ 
 // this value should be modified using clusterScript.gpp by the Builder from 
 // @NumberNodes
-int nodes = 3 
+int nodes = 6 
  
  
  
 // this part works on a loop-back network and 
 // should be commented out when running on a real network 
-//String hostIP127 = "127.0.0.1" 
-//def hostAddress = new TCPIPNodeAddress(hostIP127, 1000) 
+String hostIP127 = "127.0.0.1" 
+def hostAddress = new TCPIPNodeAddress(hostIP127, 1000) 
  
 // this part works on a real network 
-def hostAddress = new TCPIPNodeAddress(1000) 
+//def hostAddress = new TCPIPNodeAddress(1000) 
  
 // the rest of the script is common to all network environments 
 Node.getInstance().init(hostAddress) 
@@ -73,6 +73,9 @@ NetChannelInput inChan1 = NetChannel.numberedNet2One(100)
 NetChannelInput inChan2 = NetChannel.numberedNet2One(101) 
 NetChannelInput inChan3 = NetChannel.numberedNet2One(102) 
 NetChannelInput inChan4 = NetChannel.numberedNet2One(103) 
+NetChannelInput inChan5 = NetChannel.numberedNet2One(104) 
+NetChannelInput inChan6 = NetChannel.numberedNet2One(105) 
+NetChannelInput inChan7 = NetChannel.numberedNet2One(106) 
  
  
 // wait for nodes to have created their net input channels 
@@ -94,6 +97,12 @@ def otherNode2Address = new TCPIPNodeAddress(nodeIPs[1], 1000)
 NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 100) 
 def otherNode3Address = new TCPIPNodeAddress(nodeIPs[2], 1000) 
 NetChannelOutput outChan3 = NetChannel.one2net(otherNode3Address, 100) 
+def otherNode4Address = new TCPIPNodeAddress(nodeIPs[3], 1000) 
+NetChannelOutput outChan4 = NetChannel.one2net(otherNode4Address, 100) 
+def otherNode5Address = new TCPIPNodeAddress(nodeIPs[4], 1000) 
+NetChannelOutput outChan5 = NetChannel.one2net(otherNode5Address, 100) 
+def otherNode6Address = new TCPIPNodeAddress(nodeIPs[5], 1000) 
+NetChannelOutput outChan6 = NetChannel.one2net(otherNode6Address, 100) 
  
  
 // wait for nodes to have created their net output channels 
@@ -116,10 +125,16 @@ def requestListONRL = new ChannelInputList()
 requestListONRL.append(inChan1) 
 requestListONRL.append(inChan2) 
 requestListONRL.append(inChan3) 
+requestListONRL.append(inChan4) 
+requestListONRL.append(inChan5) 
+requestListONRL.append(inChan6) 
 def responseListONRL = new ChannelOutputList() 
 responseListONRL.append(outChan1) 
 responseListONRL.append(outChan2) 
 responseListONRL.append(outChan3) 
+responseListONRL.append(outChan4) 
+responseListONRL.append(outChan5) 
+responseListONRL.append(outChan6) 
  
 def emitDetails = new DataDetails( 
  dName: MCpiData.getName(), 
@@ -144,7 +159,7 @@ def onrl = new OneNodeRequestedList(
  input: chan1.in() 
 ) 
 def afo = new AnyFanOne( 
- inputAny: inChan4, 
+ inputAny: inChan7, 
  output: chan2.out(), 
  sources: nodes 
 ) 

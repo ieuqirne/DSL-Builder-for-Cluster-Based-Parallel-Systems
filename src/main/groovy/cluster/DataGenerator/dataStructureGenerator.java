@@ -1,8 +1,7 @@
 package cluster.DataGenerator;
 
-import GPP_Builder.GPPlexFileHanding;
+
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,17 +11,11 @@ public class dataStructureGenerator {
     {
         int numberWorkers = 0;
 
-        //ArrayList<Integer> ListWorkers = new ArrayList<>();
-        ArrayList<Integer> ListEmitInputs = new ArrayList<>();
-        ArrayList<Integer> ListCollectInput = new ArrayList<>();
-        ArrayList<Integer> ListNodesInputs = new ArrayList<>();
-
         boolean importBoolean = false;
         boolean emitDBoolean = false;
         boolean resDBoolean = false;
         boolean emBoolean = false;
         boolean colBoolean = false;
-        boolean chaDefBoolean = false;
 
         ArrayList<String> ListImports = new ArrayList<>();
         ArrayList<String> ListLibraries = new ArrayList<>();
@@ -167,7 +160,6 @@ public class dataStructureGenerator {
         for (String model : ListLibraries){
             ListImports.add(model);
         }
-
         dataStructureGenerator.createFileImports(tempOutPutfilePath,numberWorkers,ListImports);
 
         dataStructureGenerator.createFileNumberNodes(tempOutPutfilePath, numberWorkers);
@@ -358,7 +350,6 @@ public class dataStructureGenerator {
         }
 
         for(int i = 0; i < numberWorkers; i++){
-
             try {
                 FileWriter WorkerNodeFileWriter = new FileWriter(outPutfilePath + "NodeWorker"+(i+1)+".groovy");
                 for (int x = 0; x < ListBasicNode.size(); x++){
@@ -376,9 +367,9 @@ public class dataStructureGenerator {
                     if(ListBasicNode.get(x).equals("@OutputsChannelCreation"))
                     {
                         WorkerNodeFileWriter.write("\ndef otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)\n" +
-                                            "NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 100)\n" +
+                                            "NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, "+(100 + i)+")\n" +
                                             "def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)\n" +
-                                            "NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 10"+numberWorkers+")");
+                                            "NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, "+(100+numberWorkers) +")");
 
                     }
 

@@ -4,10 +4,16 @@ def requestListONRL = new ChannelInputList()
 requestListONRL.append(inChan1)
 requestListONRL.append(inChan2)
 requestListONRL.append(inChan3)
+requestListONRL.append(inChan4)
+requestListONRL.append(inChan5)
+requestListONRL.append(inChan6)
 def responseListONRL = new ChannelOutputList()
 responseListONRL.append(outChan1)
 responseListONRL.append(outChan2)
 responseListONRL.append(outChan3)
+responseListONRL.append(outChan4)
+responseListONRL.append(outChan5)
+responseListONRL.append(outChan6)
 
 def emitDetails = new DataDetails( 
  dName: MCpiData.getName(), 
@@ -32,7 +38,7 @@ def onrl = new OneNodeRequestedList(
  input: chan1.in()
 )
 def afo = new AnyFanOne(
- inputAny: inChan4,
+ inputAny: inChan7,
  output: chan2.out(),
  sources: nodes
 )

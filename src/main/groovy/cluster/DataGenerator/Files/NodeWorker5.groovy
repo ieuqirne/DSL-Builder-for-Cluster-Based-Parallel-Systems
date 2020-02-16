@@ -81,7 +81,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 // this bit filled in by Builder 
 // @OutputsChannelCreation
 def otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)
-NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 102)
+NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 104)
 def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)
 NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 106) 
  

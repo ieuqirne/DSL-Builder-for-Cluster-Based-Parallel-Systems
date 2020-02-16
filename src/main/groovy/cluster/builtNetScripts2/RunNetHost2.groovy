@@ -23,8 +23,9 @@ import jcsp.net2.tcpip.TCPIPNodeAddress
  * The script used to create a host process network containing an emit and collector processes.
  * Thus BasicHost has to be modified for each solution.
  */
-
-int nodes = 3   // this value should be modified using clusterScript.gpp by the Builder from //@ Cluster integer
+// this value should be modified using clusterScript.gpp by the Builder from
+// @NumberNodes
+int nodes = 3
 
 // this part works on a loop-back network and
 // should be commented out when running on a real network
@@ -110,19 +111,19 @@ responseListONRL.append(outChan3)
 
 // now create the node's processes - derived from cluster definition script
 // uses some previously created net channels
-def emitDetails = new DataDetails(dName: MCpiData.getName(),
+def emitDetails = new DataDetails(
+        dName: MCpiData.getName(),
         dInitMethod: MCpiData.init,
         dInitData: [2048],
         dCreateMethod: MCpiData.create,
         dCreateData: [1000000]
 )
-
-def resultDetails = new ResultDetails(rName: MCpiResultsSerialised.getName(),
+def resultDetails = new ResultDetails(
+        rName: MCpiResultsSerialised.getName(),
         rInitMethod: MCpiResultsSerialised.init,
         rCollectMethod: MCpiResultsSerialised.collector,
         rFinaliseMethod: MCpiResultsSerialised.finalise
 )
-
 def emit = new Emit (
         eDetails: emitDetails,
         output: chan1.out()
@@ -141,8 +142,6 @@ def collector = new Collect(
         input: chan2.in(),
         rDetails: resultDetails
 )
-
-
 
 // wait for nodes to have defined their processes
 for ( n in 0 ..< nodes){

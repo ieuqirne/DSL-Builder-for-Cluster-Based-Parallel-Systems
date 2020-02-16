@@ -105,14 +105,16 @@ responseListONRL.append(outChan2)
 
 // now create the node's processes - derived from cluster definition script
 // uses some previously created net channels
-def emitDetails = new DataDetails(dName: MCpiData.getName(),
+def emitDetails = new DataDetails(
+    dName: MCpiData.getName(),
     dInitMethod: MCpiData.init,
     dInitData: [2048],
     dCreateMethod: MCpiData.create,
     dCreateData: [1000000]
 )
 
-def resultDetails = new ResultDetails(rName: MCpiResultsSerialised.getName(),
+def resultDetails = new ResultDetails(
+    rName: MCpiResultsSerialised.getName(),
     rInitMethod: MCpiResultsSerialised.init,
     rCollectMethod: MCpiResultsSerialised.collector,
     rFinaliseMethod: MCpiResultsSerialised.finalise

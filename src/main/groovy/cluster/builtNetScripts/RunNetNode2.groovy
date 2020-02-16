@@ -28,7 +28,7 @@ import jcsp.userIO.Ask
 //String nodeIP = "127.0.0." + nodeAddress4
 //def nodeAddress = new TCPIPNodeAddress(nodeIP, 1000)
 //String hostIP = "127.0.0.1"
-//Node.getInstance().init(nodeAddress)
+fa//Node.getInstance().init(nodeAddress)
 
 // this section assumes the system is running on a real network
 // there are two ways of getting hostIP either by interaction of by argument passing

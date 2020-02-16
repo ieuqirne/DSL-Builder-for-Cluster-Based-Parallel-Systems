@@ -26,20 +26,20 @@ import jcsp.userIO.Ask
 
 // the first part assumes the Nodes are running on a loop-back 127.0.0.? network
 // it assumes the host is running on 127.0.0.1
-//String nodeAddress4 = Ask.Int( "what is the fourth part of the node's IP-address?  ", 2, 254)
-//String nodeIP = "127.0.0." + nodeAddress4
-//def nodeAddress = new TCPIPNodeAddress(nodeIP, 1000)
-//String hostIP = "127.0.0.1"
-//Node.getInstance().init(nodeAddress)
+String nodeAddress4 = Ask.Int( "what is the fourth part of the node's IP-address?  ", 2, 254)
+String nodeIP = "127.0.0." + nodeAddress4
+def nodeAddress = new TCPIPNodeAddress(nodeIP, 1000)
+String hostIP = "127.0.0.1"
+Node.getInstance().init(nodeAddress)
 
 // this section assumes the system is running on a real network
 // there are two ways of getting hostIP either by interaction of by argument passing
 // choose one only!
 //String hostIP = args[0]
-String hostIP = Ask.string("Host IP address? ")
-def nodeAddress = new TCPIPNodeAddress(1000)  // create nodeAddress for most global IP address
-Node.getInstance().init(nodeAddress)
-String nodeIP = nodeAddress.getIpAddress()
+//String hostIP = Ask.string("Host IP address? ")
+//def nodeAddress = new TCPIPNodeAddress(1000)  // create nodeAddress for most global IP address
+//Node.getInstance().init(nodeAddress)
+//String nodeIP = nodeAddress.getIpAddress()
 
 // the rest of the script is common
 
@@ -56,7 +56,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now create all the net input channels
 // this bit filled in by Builder
-// @InputsChannelCreation
+// @InputsChannelCreations
 
 // inform host that input channels have been created
 hostRequest.write(nodeIP)
@@ -76,6 +76,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 // now define the processes for the node including the additional ones required
 // @ProcessDefinition
 
+println "Run Node - $nodeIP: defined network"
 // inform host that process network has been defined
 hostRequest.write(nodeIP)
 message = hostResponse.read()
@@ -83,6 +84,8 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 
 // now invoke Process Manager to run process network
 // this bit filled in by Builder
+
+println "Node $nodeIP starting"
 // @ProcessManager
 
 println "Run Node - $nodeIP: has terminated"
