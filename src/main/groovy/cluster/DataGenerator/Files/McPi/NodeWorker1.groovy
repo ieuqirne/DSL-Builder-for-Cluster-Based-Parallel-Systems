@@ -1,5 +1,5 @@
-package cluster.boilerPlate 
- 
+package cluster.DataGenerator.Files.McPi
+
 import jcsp.net2.NetChannel 
 import jcsp.net2.NetChannelInput 
 import GPP_Library.cluster.connectors.NodeRequestingFanAny //added from Enrique 
@@ -7,7 +7,6 @@ import groovyJCSP.PAR
 import jcsp.lang.Channel 
 import jcsp.net2.NetChannel 
 import jcsp.net2.NetChannelInput 
-import jcsp.net2.NetChannelOutput 
 import jcsp.net2.NetChannelOutput //added from Enrique 
 import jcsp.net2.Node 
 import jcsp.net2.tcpip.TCPIPNodeAddress 
@@ -81,9 +80,9 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 // this bit filled in by Builder 
 // @OutputsChannelCreation
 def otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)
-NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 105)
+NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 100)
 def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)
-NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 106) 
+NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 102) 
  
  
 // inform host that output channels have been created 
@@ -93,7 +92,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
  
 // now define the processes for the node including the additional ones required 
 // @ProcessDefinition
-int workers = 6
+int workers = 2
 def chan1 = Channel.one2any()
 def chan2 = Channel.any2one()
 def nrfa = new NodeRequestingFanAny(

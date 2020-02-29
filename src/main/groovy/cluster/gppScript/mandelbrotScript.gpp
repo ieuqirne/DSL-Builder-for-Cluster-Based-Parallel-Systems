@@ -1,0 +1,46 @@
+package cluster.gppScript
+
+import GPP_Library.DataDetails
+import GPP_Library.ResultDetails
+import GPP_Library.functionals.groups.AnyGroupAny
+import GPP_Library.terminals.Collect
+import GPP_Library.terminals.Emit
+import cluster.data.MandelbrotLineData
+import cluster.data.MandelbrotResultSerialised
+import cluster.data.SerializedMandelbrotData
+
+def emitDetails = new DataDetails(
+    dName: MandelbrotLineData.getName(),
+    dInitMethod: MandelbrotLineData.init,
+    dInitData: [350,200,0.01,500],
+    dCreateMethod: MandelbrotLineData.create,
+    dCreateData: [100000]
+)
+
+def resultDetails = new ResultDetails(
+    rName: MandelbrotResultSerialised.getName(),
+    rInitMethod: MandelbrotResultSerialised.init,
+    rCollectMethod: MandelbrotResultSerialised.collector,
+    rFinaliseMethod: MandelbrotResultSerialised.finalise
+)
+
+int workers = 2
+
+//@ Emit IP-emit
+def emit = new Emit (
+    eDetails: emitDetails
+)
+
+//@ Cluster 2
+def group = new AnyGroupAny(
+    workers: workers,
+    function: SerializedMandelbrotData.calcColour
+)
+
+//@ Collect IP-collect
+def collector = new Collect(
+    rDetails: resultDetails
+)
+
+
+

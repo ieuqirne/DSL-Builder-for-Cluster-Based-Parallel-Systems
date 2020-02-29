@@ -1,5 +1,5 @@
-package cluster.boilerPlate 
- 
+package cluster.DataGenerator.Files.Mandelbrot
+
 import groovyJCSP.PAR 
 import jcsp.lang.Channel 
 import jcsp.net2.NetChannel 
@@ -16,9 +16,9 @@ import GPP_Library.ResultDetails
 import GPP_Library.functionals.groups.AnyGroupAny 
 import GPP_Library.terminals.Collect 
 import GPP_Library.terminals.Emit 
-import cluster.data.MCpiData 
-import cluster.data.MCpiResultsSerialised 
-import cluster.data.SerializedMCpiData 
+import cluster.data.MandelbrotLineData 
+import cluster.data.MandelbrotResultSerialised 
+import cluster.data.SerializedMandelbrotData 
 
 import GPP_Library.cluster.connectors.OneNodeRequestedList 
 import GPP_Library.connectors.reducers.AnyFanOne 
@@ -30,7 +30,7 @@ import GPP_Library.connectors.reducers.AnyFanOne
  */ 
 // this value should be modified using clusterScript.gpp by the Builder from 
 // @NumberNodes
-int nodes = 6 
+int nodes = 2 
  
  
  
@@ -72,10 +72,6 @@ for ( n in 0 ..< nodes ){
 NetChannelInput inChan1 = NetChannel.numberedNet2One(100) 
 NetChannelInput inChan2 = NetChannel.numberedNet2One(101) 
 NetChannelInput inChan3 = NetChannel.numberedNet2One(102) 
-NetChannelInput inChan4 = NetChannel.numberedNet2One(103) 
-NetChannelInput inChan5 = NetChannel.numberedNet2One(104) 
-NetChannelInput inChan6 = NetChannel.numberedNet2One(105) 
-NetChannelInput inChan7 = NetChannel.numberedNet2One(106) 
  
  
 // wait for nodes to have created their net input channels 
@@ -95,14 +91,6 @@ def otherNode1Address = new TCPIPNodeAddress(nodeIPs[0], 1000)
 NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 100) 
 def otherNode2Address = new TCPIPNodeAddress(nodeIPs[1], 1000) 
 NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 100) 
-def otherNode3Address = new TCPIPNodeAddress(nodeIPs[2], 1000) 
-NetChannelOutput outChan3 = NetChannel.one2net(otherNode3Address, 100) 
-def otherNode4Address = new TCPIPNodeAddress(nodeIPs[3], 1000) 
-NetChannelOutput outChan4 = NetChannel.one2net(otherNode4Address, 100) 
-def otherNode5Address = new TCPIPNodeAddress(nodeIPs[4], 1000) 
-NetChannelOutput outChan5 = NetChannel.one2net(otherNode5Address, 100) 
-def otherNode6Address = new TCPIPNodeAddress(nodeIPs[5], 1000) 
-NetChannelOutput outChan6 = NetChannel.one2net(otherNode6Address, 100) 
  
  
 // wait for nodes to have created their net output channels 
@@ -124,30 +112,22 @@ def chan2 = Channel.one2one()
 def requestListONRL = new ChannelInputList() 
 requestListONRL.append(inChan1) 
 requestListONRL.append(inChan2) 
-requestListONRL.append(inChan3) 
-requestListONRL.append(inChan4) 
-requestListONRL.append(inChan5) 
-requestListONRL.append(inChan6) 
 def responseListONRL = new ChannelOutputList() 
 responseListONRL.append(outChan1) 
 responseListONRL.append(outChan2) 
-responseListONRL.append(outChan3) 
-responseListONRL.append(outChan4) 
-responseListONRL.append(outChan5) 
-responseListONRL.append(outChan6) 
  
 def emitDetails = new DataDetails( 
- dName: MCpiData.getName(), 
- dInitMethod: MCpiData.init, 
- dInitData: [1024], 
- dCreateMethod: MCpiData.create, 
+ dName: MandelbrotLineData.getName(), 
+ dInitMethod: MandelbrotLineData.init, 
+ dInitData: [350,200,0.01,500], 
+ dCreateMethod: MandelbrotLineData.create, 
  dCreateData: [100000] 
 ) 
 def resultDetails = new ResultDetails( 
- rName: MCpiResultsSerialised.getName(), 
- rInitMethod: MCpiResultsSerialised.init, 
- rCollectMethod: MCpiResultsSerialised.collector, 
- rFinaliseMethod: MCpiResultsSerialised.finalise 
+ rName: MandelbrotResultSerialised.getName(), 
+ rInitMethod: MandelbrotResultSerialised.init, 
+ rCollectMethod: MandelbrotResultSerialised.collector, 
+ rFinaliseMethod: MandelbrotResultSerialised.finalise 
 ) 
 def emit = new Emit ( 
  eDetails: emitDetails, 
@@ -159,7 +139,7 @@ def onrl = new OneNodeRequestedList(
  input: chan1.in() 
 ) 
 def afo = new AnyFanOne( 
- inputAny: inChan7, 
+ inputAny: inChan3, 
  output: chan2.out(), 
  sources: nodes 
 ) 

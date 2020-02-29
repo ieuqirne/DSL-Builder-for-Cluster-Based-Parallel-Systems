@@ -7,7 +7,6 @@ import groovyJCSP.PAR
 import jcsp.lang.Channel
 import jcsp.net2.NetChannel
 import jcsp.net2.NetChannelInput
-import jcsp.net2.NetChannelOutput
 import jcsp.net2.NetChannelOutput //added from Enrique
 import jcsp.net2.Node
 import jcsp.net2.tcpip.TCPIPNodeAddress

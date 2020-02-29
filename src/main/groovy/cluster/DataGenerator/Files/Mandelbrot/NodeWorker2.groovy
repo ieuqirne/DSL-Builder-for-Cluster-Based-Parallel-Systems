@@ -1,5 +1,5 @@
-package cluster.boilerPlate 
- 
+package cluster.DataGenerator.Files.Mandelbrot
+
 import jcsp.net2.NetChannel 
 import jcsp.net2.NetChannelInput 
 import GPP_Library.cluster.connectors.NodeRequestingFanAny //added from Enrique 
@@ -7,7 +7,6 @@ import groovyJCSP.PAR
 import jcsp.lang.Channel 
 import jcsp.net2.NetChannel 
 import jcsp.net2.NetChannelInput 
-import jcsp.net2.NetChannelOutput 
 import jcsp.net2.NetChannelOutput //added from Enrique 
 import jcsp.net2.Node 
 import jcsp.net2.tcpip.TCPIPNodeAddress 
@@ -19,9 +18,9 @@ import GPP_Library.ResultDetails
 import GPP_Library.functionals.groups.AnyGroupAny 
 import GPP_Library.terminals.Collect 
 import GPP_Library.terminals.Emit 
-import cluster.data.MCpiData 
-import cluster.data.MCpiResultsSerialised 
-import cluster.data.SerializedMCpiData 
+import cluster.data.MandelbrotLineData 
+import cluster.data.MandelbrotResultSerialised 
+import cluster.data.SerializedMandelbrotData 
 
 import GPP_Library.cluster.connectors.OneNodeRequestedList 
 import GPP_Library.connectors.reducers.AnyFanOne 
@@ -81,9 +80,9 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 // this bit filled in by Builder 
 // @OutputsChannelCreation
 def otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)
-NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 104)
+NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 101)
 def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)
-NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 106) 
+NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 102) 
  
  
 // inform host that output channels have been created 
@@ -93,7 +92,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
  
 // now define the processes for the node including the additional ones required 
 // @ProcessDefinition
-int workers = 6
+int workers = 2
 def chan1 = Channel.one2any()
 def chan2 = Channel.any2one()
 def nrfa = new NodeRequestingFanAny(
@@ -106,7 +105,7 @@ def group = new AnyGroupAny(
         inputAny: chan1.in(),
         outputAny: chan2.out(),
         workers: workers,
-        function: SerializedMCpiData.withinOp
+        function: SerializedMandelbrotData.calcColour
 )
 def afo = new AnyFanOne(
         inputAny: chan2.in(),
