@@ -82,7 +82,7 @@ assert (message == hostIP): "Run Node - $nodeIP: expected $hostIP received $mess
 def otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)
 NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, 100)
 def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)
-NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 102) 
+NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, 104) 
  
  
 // inform host that output channels have been created 

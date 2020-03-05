@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class dataStructureGenerator {
-    public static void main(String[] args) throws Exception
+public class dataStructureGenerator {    public static void main(String[] args) throws Exception
     {
+        int numberClusters = 0;
         int numberWorkers = 0;
 
         boolean importBoolean = false;
@@ -87,10 +87,15 @@ public class dataStructureGenerator {
                 {
                     importBoolean = true;
                 }
-                if (words[x].equals("workers"))   //Search for the given word
+                if (words[x].equals("Cluster"))   //Search for the given word
                 {
-                    numberWorkers = Integer.parseInt(words[x+2]);
+                    numberClusters = Integer.parseInt(words[x+1]);
                     //ListWorkers.add( Integer.parseInt(words[x+2]));    //If Present increase the count by one
+                }
+                if (words[x].equals("workers")) //Search for the give word
+                {
+                    numberWorkers = Integer.parseInt((words[x+2]));
+                    System.out.println("NumberWorkers: " + numberWorkers);
                 }
                 if (words[x].equals("def"))   //Search for the given word
                 {
@@ -160,16 +165,16 @@ public class dataStructureGenerator {
         for (String model : ListLibraries){
             ListImports.add(model);
         }
-        dataStructureGenerator.createFileImports(tempOutPutfilePath,numberWorkers,ListImports);
+        dataStructureGenerator.createFileImports(tempOutPutfilePath,numberClusters,ListImports);
 
-        dataStructureGenerator.createFileNumberNodes(tempOutPutfilePath, numberWorkers);
+        dataStructureGenerator.createFileNumberNodes(tempOutPutfilePath, numberClusters);
 
-        dataStructureGenerator.createFileInputs(tempOutPutfilePath, numberWorkers);
+        dataStructureGenerator.createFileInputs(tempOutPutfilePath, numberClusters);
 
-        dataStructureGenerator.createFileOutputs(tempOutPutfilePath,numberWorkers);
+        dataStructureGenerator.createFileOutputs(tempOutPutfilePath,numberClusters);
 
         dataStructureGenerator.createFileProcessDefinition(tempOutPutfilePath,ListEmitDetails,
-                 ListResultDetails, ListEmit,ListCol,numberWorkers, requestType, responseType);
+                 ListResultDetails, ListEmit,ListCol,numberClusters, requestType, responseType);
 
         dataStructureGenerator.createFileProcessManager(tempOutPutfilePath,defStringNames);
 
@@ -349,7 +354,7 @@ public class dataStructureGenerator {
             ListBasicNode.add("\n");
         }
 
-        for(int i = 0; i < numberWorkers; i++){
+        for(int i = 0; i < numberClusters; i++){
             try {
                 FileWriter WorkerNodeFileWriter = new FileWriter(outPutfilePath + "NodeWorker"+(i+1)+".groovy");
                 for (int x = 0; x < ListBasicNode.size(); x++){
@@ -369,7 +374,7 @@ public class dataStructureGenerator {
                         WorkerNodeFileWriter.write("\ndef otherNode1Address = new TCPIPNodeAddress(hostIP, 1000)\n" +
                                             "NetChannelOutput outChan1 = NetChannel.one2net(otherNode1Address, "+(100 + i)+")\n" +
                                             "def otherNode2Address = new TCPIPNodeAddress(hostIP, 1000)\n" +
-                                            "NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, "+(100+numberWorkers) +")");
+                                            "NetChannelOutput outChan2 = NetChannel.one2net(otherNode2Address, "+(100+numberClusters) +")");
 
                     }
 
@@ -404,9 +409,9 @@ public class dataStructureGenerator {
                 }
                 WorkerNodeFileWriter.close();
 
-                System.out.println("Successfully wrote to the file WorkerNode"+numberWorkers+".gpp");
+                System.out.println("Successfully wrote to the file WorkerNode"+i+".gpp");
             } catch (IOException e) {
-                System.out.println("An error occurred on file WorkerNode"+numberWorkers+".gpp");
+                System.out.println("An error occurred on file WorkerNode"+numberClusters+".gpp");
                 e.printStackTrace();
             }
 
@@ -417,7 +422,7 @@ public class dataStructureGenerator {
 
     }
 
-    static void createFileImports(String tempOutPutfilePath, int numberWorkers, ArrayList<String> ListImports){
+    static void createFileImports(String tempOutPutfilePath, int numberClusters, ArrayList<String> ListImports){
         //Creating File Imports.gpp
         try {
             FileWriter ImportFileWriter = new FileWriter(tempOutPutfilePath + "Imports.gpp");
@@ -433,12 +438,12 @@ public class dataStructureGenerator {
         }
     }
     //Creating File NumberNodes.gpp
-    static void createFileNumberNodes(String tempOutPutfilePath, int numberWorkers){
+    static void createFileNumberNodes(String tempOutPutfilePath, int numberCluster){
 
         try {
             FileWriter NumberNodesFileWriter = new FileWriter(tempOutPutfilePath + "NumberNodes.gpp");
 
-            NumberNodesFileWriter.write("int nodes = " + numberWorkers);
+            NumberNodesFileWriter.write("int nodes = " + numberCluster);
 
             NumberNodesFileWriter.close();
             System.out.println("Successfully wrote to the file NumberNodes.gpp");
@@ -449,12 +454,12 @@ public class dataStructureGenerator {
     }
 
     //Creating File InputsChannelCreation.gpp
-    static void createFileInputs(String tempOutPutfilePath, int numberWorkers){
+    static void createFileInputs(String tempOutPutfilePath, int numberClusters){
 
         try {
             FileWriter InputsFileWriter = new FileWriter(tempOutPutfilePath + "InputsChannelCreation.gpp");
 
-            for(int x = 0; x <= numberWorkers; x++)
+            for(int x = 0; x <= numberClusters; x++)
             {
                 int temp = 100 + x;
                 InputsFileWriter.write("NetChannelInput inChan" + (x+1) + " = NetChannel.numberedNet2One(" + temp + ")\n");
@@ -469,11 +474,11 @@ public class dataStructureGenerator {
 
     }
     //Creating File OutputsChannelCreation.gpp
-    static void createFileOutputs(String tempOutPutfilePath, int numberWorkers){
+    static void createFileOutputs(String tempOutPutfilePath, int numberClusters){
         try {
             FileWriter OutputsFileWriter = new FileWriter(tempOutPutfilePath + "OutputsChannelCreation.gpp");
 
-            for(int x = 0; x < numberWorkers; x++) {
+            for(int x = 0; x < numberClusters; x++) {
                 OutputsFileWriter.write("def otherNode"+ (x+1) +"Address = new TCPIPNodeAddress(nodeIPs["+ x +"], 1000)\n");
                 OutputsFileWriter.write("NetChannelOutput outChan"+ (x+1) +" = NetChannel.one2net(otherNode"+ (x+1) +"Address, 100)\n");
             }
@@ -489,7 +494,7 @@ public class dataStructureGenerator {
     //Creating File ProcessDefinition.gpp
     static void createFileProcessDefinition(String tempOutPutfilePath, ArrayList<String> ListEmitDetails,
                                             ArrayList<String> ListResultDetails, ArrayList<String> ListEmit,
-                                            ArrayList<String> ListCol, int numberWorkers,String requestType,
+                                            ArrayList<String> ListCol, int numberClusters,String requestType,
                                             String responseType){
 
         try {
@@ -499,11 +504,11 @@ public class dataStructureGenerator {
                 ProDefFileWriter.write("def chan"+ (x+1) +" = Channel.one2one()\n");
             }
             ProDefFileWriter.write("def "+ requestType +" = new ChannelInputList()\n");
-            for(int x = 0; x < numberWorkers; x++) {
+            for(int x = 0; x < numberClusters; x++) {
                 ProDefFileWriter.write(requestType +".append(inChan" + (x + 1) + ")\n");
             }
             ProDefFileWriter.write("def "+ responseType +" = new ChannelOutputList()\n");
-            for(int x = 0; x < numberWorkers; x++) {
+            for(int x = 0; x < numberClusters; x++) {
                 ProDefFileWriter.write(responseType + ".append(outChan"+ (x+1) +")\n");
             }
 
@@ -530,7 +535,7 @@ public class dataStructureGenerator {
             ProDefFileWriter.write(" input: chan1.in()\n)");
 
             ProDefFileWriter.write("\ndef afo = new AnyFanOne(\n");
-            ProDefFileWriter.write(" inputAny: inChan"+ (numberWorkers+1) +",\n");
+            ProDefFileWriter.write(" inputAny: inChan"+ (numberClusters+1) +",\n");
             ProDefFileWriter.write(" output: chan2.out(),\n");
             ProDefFileWriter.write(" sources: nodes\n)");
 
