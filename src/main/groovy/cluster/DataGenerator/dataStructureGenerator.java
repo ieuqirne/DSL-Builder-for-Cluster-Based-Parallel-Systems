@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class dataStructureGenerator {    public static void main(String[] args) throws Exception
+public class dataStructureGenerator {
+    public static void main(String[] args) throws Exception
     {
         int numberClusters = 0;
         int numberWorkers = 0;

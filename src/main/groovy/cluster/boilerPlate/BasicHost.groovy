@@ -97,7 +97,12 @@ for ( n in 0 ..< nodes ){
 
 // now invoke a Process Manager to run the processes
 // this bit filled in by Builder
+long startTime = System.nanoTime()
 
 // @ProcessManager
 
+long endTime = System.nanoTime()
 println "RunHost has terminated"
+long duration = (endTime - startTime)
+double seconds = (double)duration / 1_000_000_000.0;
+System.out.println("Duration: " + seconds + " seconds")
