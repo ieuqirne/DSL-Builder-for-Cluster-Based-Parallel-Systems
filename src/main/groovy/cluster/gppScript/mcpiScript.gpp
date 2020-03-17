@@ -31,7 +31,7 @@ def emit = new Emit (
     eDetails: emitDetails
 )
 
-//@ Cluster 2
+//@ Cluster 3
 def group = new AnyGroupAny(
     workers: workers,
     function: SerializedMCpiData.withinOp
@@ -41,6 +41,3 @@ def group = new AnyGroupAny(
 def collector = new Collect(
     rDetails: resultDetails
 )
-
-
-
